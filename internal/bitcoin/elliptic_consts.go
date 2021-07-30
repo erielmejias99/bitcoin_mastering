@@ -19,8 +19,6 @@ type EllipticPoint struct {
 	Y EllipticParam
 }
 
-
-
 var n * big.Int
 func GetN() * big.Int{
 	if n == nil || n.Text(10) != N.Value() {

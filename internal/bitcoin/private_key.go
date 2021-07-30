@@ -37,22 +37,19 @@ func RandomString( n int ) ([]byte, error )  {
 }
 
 
-func EncodePrivateKey( key big.Int, format EncodeFormat ) string{
+func EncodePrivateKey( key *big.Int, format EncodeFormat ) string{
 	switch format {
 	case Hex:
 		encoded := key.Text(16)
 		return encoded
+	case HexCompressed:
+		return key.Text(16) + "01"
 	case Wif:
-		return ""//key.SetString( key.Text(16) + "01", 58 )
+		return EncodeBase58Check( WifPrefix, key )
 	case WifCompressed:
-		return ""//key.SetString( key.Text(16) + "01", 58 )
+		return ""
+		//return Encode( []byte(key.Text(10) + "01" ) )
 	default:
 		panic("Invalid format")
 	}
-}
-
-const base58digits = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
-
-func ToBase58( big.Int ) string{
-	return ""
 }
