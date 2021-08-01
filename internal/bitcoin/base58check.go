@@ -65,35 +65,34 @@ func findAlphabetIndex( char uint8 ) (index int, err error) {
 	return -1, errors.New("character not found in alphabet" )
 }
 
-func decodeBase58CheckToInt( key string ) *big.Int{
+func decodeBase58CheckToInt( key string ) (*big.Int, error){
 
 	//calculate last value first
 	index, err := findAlphabetIndex( key[ len(key)-1 ] )
 	if err !=nil{
-		return nil
+		return nil, LetterNotFound{ char: key[ len(key)-1 ] }
 	}
 	keyInt := big.NewInt( int64(index) )
-	
+	base58 := big.NewInt(58 )
+
 	for i := len( key ) - 2; i >= 0; i--{
 		index, err := findAlphabetIndex( key[ i ] )
 		if err != nil{
-			return nil
+			return nil,err
 		}
-
 		//calculate pow
-		base := big.NewInt( 58 )
+		baseExp := big.NewInt( 58 )
 		for expIndex := len( key ) - i - 1; expIndex > 1; expIndex --{
-			base.Mul( base, big.NewInt(58 ) )
+			baseExp.Mul( baseExp, base58 )
 		}
 		//multiply by the index of the letter
-		base.Mul( base, big.NewInt( int64( index  ) ) )
+		baseExp.Mul( baseExp, big.NewInt( int64( index ) ) )
 
 		// sum with the total kwy calculation
-		keyInt.Add( keyInt, base )
+		keyInt.Add( keyInt, baseExp )
 	}
 
-	return keyInt
-
+	return keyInt, nil
 }
 
 func DecodeBase58Check( key string ) (string, error){
