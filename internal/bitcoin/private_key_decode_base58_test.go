@@ -23,9 +23,6 @@ func TestDecodeStringToInt(t *testing.T){
 func TestFindCharIndexInAlphabet(t *testing.T){
 
 	for i, char := range alphabet{
-		if i == 57{
-			print( "sd")
-		}
 		index, err := findAlphabetIndex( uint8(char) )
 		if err != nil{
 			t.Errorf("Error looking for the index %s", err.Error() )
@@ -57,5 +54,41 @@ func TestFindNotCorrectLetterInAlphabet(t *testing.T) {
 	_, err = findAlphabetIndex( uint8('I') )
 	if err == nil{
 		t.Errorf("The char 0 doesn't belongs to base58 alphabet, must be an error here.")
+	}
+}
+
+func TestDecodeBase58CheckWifKey(t *testing.T) {
+	base58Wif, err := DecodeBase58Check( "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+	if err != nil || base58Wif == nil {
+		t.Error( err )
+	}
+	decodedWif := hex.EncodeToString( base58Wif.Bytes() )
+	if decodedWif != "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"{
+		t.Fail()
+	}
+}
+
+func TestDecodeBase58CheckStringWifKey(t *testing.T) {
+	base58Wif, err := DecodeBase58CheckString( "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+	if err != nil || base58Wif == "" {
+		t.Error( err )
+	}
+	if base58Wif != "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"{
+		t.Fail()
+	}
+}
+
+func TestDecodeBase58CheckStringBadWifKey(t *testing.T) {
+	_, err := DecodeBase58CheckString( "J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+	if err != nil {
+		t.Log("Wrong prefix passed!")
+	}
+	_, err = DecodeBase58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+	if err != nil {
+		t.Log("Missing character passed!")
+	}
+	_, err = DecodeBase58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2Jpbnkeyhfs45YB1Jcn" )
+	if err != nil {
+		t.Log("Extra character passed!")
 	}
 }

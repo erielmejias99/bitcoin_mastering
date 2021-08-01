@@ -45,7 +45,7 @@ func EncodePrivateKey( key *big.Int, format EncodeFormat ) string{
 	case HexCompressed:
 		return key.Text(16) + "01"
 	case Wif:
-		return EncodeBase58Check( WifPrefix, key )
+		return EncodeBase58Check(PrivateKeyWif, key )
 	case WifCompressed:
 		return ""
 		//return Encode( []byte(key.Text(10) + "01" ) )

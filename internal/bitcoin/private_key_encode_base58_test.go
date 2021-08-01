@@ -26,7 +26,7 @@ func TestPrivateKeyEncodeWif(t *testing.T){
 
 func TestWifCheckSum(t *testing.T) {
 	payloadByte, _ := hex.DecodeString( "0c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d")
-	base58Checksum := hex.EncodeToString(  checksum ( WifPrefix, payloadByte ) )
+	base58Checksum := hex.EncodeToString(  checksum (PrivateKeyWif, payloadByte ) )
 	if base58Checksum != "507a5b8d"{
 		t.FailNow()
 	}
