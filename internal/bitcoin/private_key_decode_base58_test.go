@@ -15,5 +15,7 @@ func TestDecodeStringToInt(t *testing.T){
 	}
 
 	hexFormat := hex.EncodeToString( resp.Bytes() )
-	if hexFormat !=
+	if hexFormat != "800c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d507a5b8d"{
+		t.Errorf( "Incorrect response from the decoder, Must be 800c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d507a5b8d and was %s", hexFormat)
+	}
 }
