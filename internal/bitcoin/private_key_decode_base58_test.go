@@ -19,3 +19,19 @@ func TestDecodeStringToInt(t *testing.T){
 		t.Errorf( "Incorrect response from the decoder, Must be 800c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d507a5b8d and was %s", hexFormat)
 	}
 }
+
+func TestFindCharIndexInAphabet(t *testing.T){
+
+	for i, char := range alphabet{
+		if i == 57{
+			print( "sd")
+		}
+		index, err := findAlphabetIndex( uint8(char) )
+		if err != nil{
+			t.Errorf("Error looking for the index %s", err.Error() )
+		}
+		if index != i {
+			t.Errorf( "Letter not found in base58 alphabet looking for %d char %s", i, string(alphabet[i]) )
+		}
+	}
+}
