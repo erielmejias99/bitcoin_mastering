@@ -7,7 +7,6 @@ import (
 	"testing"
 )
 
-
 func TestPrivateKeyEncodeWif(t *testing.T){
 	privateKeyHex := "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"
 	var privateKey,_ = new( big.Int ).SetString( privateKeyHex, 16 )
@@ -146,7 +145,7 @@ func TestEncodeDecodeWithRandomKeysBigInt(t *testing.T){
 		}
 		if  privateKey.Text(16) != decodedPrivateKeyFromWifCompressed +"01"{
 			errorCount++
-			t.Errorf( "Diferent keys Compressed %s -> %s" , privateKey.Text(16), decodedPrivateKeyFromWifCompressed)
+			t.Errorf( "Diferent keys Compressed %s -> %s", privateKey.Text(16), decodedPrivateKeyFromWifCompressed)
 		}
 	}
 	if errorCount != 0{
