@@ -11,7 +11,7 @@ import (
 func TestPrivateKeyEncodeWif(t *testing.T){
 	privateKeyHex := "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"
 	var privateKey,_ = new( big.Int ).SetString( privateKeyHex, 16 )
-	encodePrivateKey, err  := Encode( consts.Wif, privateKey )
+	encodePrivateKey, err  := Encode( consts.PrivateKeyWif, privateKey )
 	if err != nil {
 		t.Error( err.Error() )
 	}
@@ -23,6 +23,28 @@ func TestPrivateKeyEncodeWif(t *testing.T){
 func TestPrivateKeyDecodeWif(t *testing.T){
 	privateKeyWif := "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn"
 	decodedPrivateKey, err  := Decode( privateKeyWif )
+	if err != nil {
+		t.Error( err.Error() )
+	}
+	if  decodedPrivateKey.Text(16) != "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd" {
+		t.FailNow()
+	}
+}
+func TestPrivateKeyEncodeWifCompressed(t *testing.T){
+	privateKeyHex := "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"
+	var privateKey,_ = new( big.Int ).SetString( privateKeyHex, 16 )
+	encodePrivateKey, err  := Encode( consts.PrivateKeyWifCompressed, privateKey )
+	if err != nil {
+		t.Error( err.Error() )
+	}
+	if  encodePrivateKey != "KxFC1jmwwCoACiCAWZ3eXa96mBM6tb3TYzGmf6YwgdGWZgawvrtJ" {
+		t.FailNow()
+	}
+}
+
+func TestPrivateKeyDecodeWifCompressed(t *testing.T){
+	privateKeyWifCompressed := "KxFC1jmwwCoACiCAWZ3eXa96mBM6tb3TYzGmf6YwgdGWZgawvrtJ"
+	decodedPrivateKey, err  := Decode( privateKeyWifCompressed )
 	if err != nil {
 		t.Error( err.Error() )
 	}
@@ -44,7 +66,7 @@ func TestPrivateKeyDecodeStringWif(t *testing.T){
 
 func TestPrivateKeyEncodeStringWif(t *testing.T){
 	privateKeyHex := "1e99423a4ed27608a15a2616a2b0e9e52ced330ac530edcc32c8ffc6a526aedd"
-	encodePrivateKey, err  := EncodeString( consts.Wif, privateKeyHex )
+	encodePrivateKey, err  := EncodeString( consts.PrivateKeyWif, privateKeyHex )
 	if err != nil {
 		t.Error( err.Error() )
 	}
@@ -58,7 +80,7 @@ func TestEncodeDecodeWithRandomKeys(t *testing.T){
 	var errorCount = 0
 	for totalTest := total;totalTest > 0; totalTest--{
 		privateKey := key_generation.GeneratePrivateKey()
-		encodedPrivateKey, err := Encode( consts.Wif, privateKey)
+		encodedPrivateKey, err := Encode( consts.PrivateKeyWif, privateKey)
 		if err != nil {
 			errorCount++
 			t.Errorf( "PrivateKey: %s  Error: %s",
@@ -87,7 +109,7 @@ func TestEncodeDecodeWithRandomKeysBigInt(t *testing.T){
 	var errorCount = 0
 	for totalTest := total;totalTest > 0; totalTest--{
 		privateKey := key_generation.GeneratePrivateKey()
-		encodedPrivateKey, err := Encode( consts.Wif, privateKey)
+		encodedPrivateKey, err := Encode( consts.PrivateKeyWif, privateKey)
 		if err != nil {
 			errorCount++
 			t.Errorf( "PrivateKey: %s  Error: %s",

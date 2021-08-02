@@ -1,7 +1,6 @@
 package bitcoin
 
 import (
-	"encoding/hex"
 	"errors"
 	"github.com/bitcoin_mastering/internal/bitcoin/consts"
 	"github.com/bitcoin_mastering/internal/bitcoin/decode"
@@ -18,12 +17,11 @@ func Encode( format consts.EncodeFormat, key *big.Int ) (string, error){
 		return encoded, nil
 	case consts.HexCompressed:
 		return key.Text(16) + "01", nil
-	case consts.Wif:
+	case consts.PrivateKeyWif:
 		return encode.EncodeBase58Check( encode.PrivateKeyWif, key ), nil
-	case consts.WifCompressed:
-		suffix,_ := hex.DecodeString( "01" )
-		key.Append( suffix, 16 )
-		return encode.EncodeBase58Check(encode.PrivateKeyWif, key ), nil
+	case consts.PrivateKeyWifCompressed:
+		key.SetString( key.Text(16) + "01", 16 )
+		return encode.EncodeBase58Check(encode.PrivateKeyWifCompressed, key ), nil
 	default:
 		panic("Invalid format")
 	}

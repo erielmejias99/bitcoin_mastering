@@ -17,6 +17,9 @@ func discoverEncodePrefix( key string ) (encode.EncodePrefix, error){
 	if  key[ 0 ] == 'K' || key[ 0 ] == 'L'{
 		return encode.PrivateKeyWifCompressed, nil
 	}
+	if key[ 0 ] == '1'{
+		return encode.BitcoinAddress, nil
+	}
 	return "",errors.New("PrefixFormat not found")
 }
 
@@ -142,9 +145,10 @@ func Base58Check( key string ) (*big.Int, error){
 
 	//determine encode format
 	format, err := discoverEncodeFormat( key )
+	prefix, err := discoverEncodePrefix( key )
 
 	//validate key size
-	err = ValidateKeySize( format, key )
+	err = ValidateEncodedKeySize( format, key )
 	if err != nil {
 		return nil, err
 	}
@@ -161,11 +165,17 @@ func Base58Check( key string ) (*big.Int, error){
 		return nil, err
 	}
 
+	// Some encodes contains suffixes
+	extraSuffixBytes := 0
+	if format == consts.PrivateKeyWifCompressed{
+		extraSuffixBytes = 1
+	}
+
 	//remove firsts version byte
-	bytesKey := keyInt.Bytes()[ format.ByteSize() :]
+	bytesKey := keyInt.Bytes()[ prefix.ByteSize() :]
 
 	//remove 4 checksum bytes
-	bytesKey = bytesKey[0:len( bytesKey ) - 4 ]
+	bytesKey = bytesKey[0: ( len( bytesKey ) - 4 ) - extraSuffixBytes ]
 
 	// convert to big.Int
 	keyInt.SetBytes( bytesKey )
