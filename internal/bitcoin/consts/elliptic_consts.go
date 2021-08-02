@@ -1,4 +1,4 @@
-package bitcoin
+package consts
 
 import "math/big"
 
@@ -27,17 +27,18 @@ func GetN() * big.Int{
 	return n
 }
 
-func ( e EllipticParam ) Value() string{
+func ( e EllipticParam) Value() string{
 	return string(e)
 }
 
 type EncodeFormat string
 
 const(
-	Hex 			EncodeFormat = "hex"
-	Wif  			EncodeFormat = "wif"
-	HexCompressed 	EncodeFormat = "hex_compressed"
-	WifCompressed 	EncodeFormat = "wif_compressed"
+	Hex           EncodeFormat = "hex"
+	PrivateKeyWif           EncodeFormat = "private_key_wif"
+	HexCompressed 			EncodeFormat = "hex_compressed"
+	PrivateKeyWifCompressed EncodeFormat = "private_key_wif_compressed"
+	Address EncodeFormat = "address"
 )
 
 func (e EncodeFormat) Value() string  {

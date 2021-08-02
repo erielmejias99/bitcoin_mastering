@@ -1,11 +1,11 @@
-package bitcoin
+package encode
 
 import "fmt"
 
 type InvalidPrivateKey struct {
-	hint string
+	Hint string
 }
 
 func (i *InvalidPrivateKey) Error()string {
-	return fmt.Sprintf( "Invalid error key hint: %s", i.hint )
+	return fmt.Sprintf( "Invalid error key hint: %s", i.Hint )
 }

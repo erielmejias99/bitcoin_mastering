@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/bitcoin_mastering/internal/bitcoin"
+	"github.com/bitcoin_mastering/internal/bitcoin/key_generation"
 )
 
 func main() {
-	privateKey := bitcoin.GeneratePrivateKey()
+	privateKey := key_generation.GeneratePrivateKey()
 	fmt.Printf( "%s", privateKey.Text(10) )
 }

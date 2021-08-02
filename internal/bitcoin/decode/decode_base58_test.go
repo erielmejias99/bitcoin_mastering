@@ -1,7 +1,10 @@
-package bitcoin
+package decode
 
 import (
 	"encoding/hex"
+	"github.com/bitcoin_mastering/internal/bitcoin/consts"
+	"github.com/bitcoin_mastering/internal/bitcoin/encode"
+	"github.com/bitcoin_mastering/internal/bitcoin/key_generation"
 	"math/big"
 	"testing"
 )
@@ -23,13 +26,13 @@ func TestDecodeStringToInt(t *testing.T){
 
 func TestFindCharIndexInAlphabet(t *testing.T){
 
-	for i, char := range alphabet{
+	for i, char := range consts.Base58Alphabet {
 		index, err := findAlphabetIndex( uint8(char) )
 		if err != nil{
 			t.Errorf("Error looking for the index %s", err.Error() )
 		}
 		if index != i {
-			t.Errorf( "Letter not found in base58 alphabet looking for %d char %s", i, string(alphabet[i]) )
+			t.Errorf( "Letter not found in base58 alphabet looking for %d char %s", i, string(consts.Base58Alphabet[i]) )
 		}
 	}
 }
@@ -58,8 +61,8 @@ func TestFindNotCorrectLetterInAlphabet(t *testing.T) {
 	}
 }
 
-func TestDecodeBase58CheckWifKey(t *testing.T) {
-	base58Wif, err := DecodeBase58Check( "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+func TestBase58CheckWifKey(t *testing.T) {
+	base58Wif, err := Base58Check( "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
 	if err != nil || base58Wif == nil {
 		t.Error( err )
 	}
@@ -69,8 +72,8 @@ func TestDecodeBase58CheckWifKey(t *testing.T) {
 	}
 }
 
-func TestDecodeBase58CheckStringWifKey(t *testing.T) {
-	base58Wif, err := DecodeBase58CheckString( "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+func TestBase58CheckStringWifKey(t *testing.T) {
+	base58Wif, err := Base58CheckString( "5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
 	if err != nil || base58Wif == "" {
 		t.Error( err )
 	}
@@ -79,16 +82,16 @@ func TestDecodeBase58CheckStringWifKey(t *testing.T) {
 	}
 }
 
-func TestDecodeBase58CheckStringBadWifKey(t *testing.T) {
-	_, err := DecodeBase58CheckString( "J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+func TestBase58CheckStringBadWifKey(t *testing.T) {
+	_, err := Base58CheckString( "J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
 	if err != nil {
 		t.Log("Wrong prefix passed!")
 	}
-	_, err = DecodeBase58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
+	_, err = Base58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn" )
 	if err != nil {
 		t.Log("Missing character passed!")
 	}
-	_, err = DecodeBase58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2Jpbnkeyhfs45YB1Jcn" )
+	_, err = Base58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2Jpbnkeyhfs45YB1Jcn" )
 	if err != nil {
 		t.Log("Extra character passed!")
 	}
@@ -98,9 +101,9 @@ func TestEncodeDecodeWithRandomKeys(t *testing.T){
 	const total = 10000
 	var errorCount = 0
 	for totalTest := total;totalTest > 0; totalTest--{
-		privateKey := GeneratePrivateKey()
-		encodedPrivateKey := EncodeBase58Check( PrivateKeyWif, privateKey)
-		decodedPrivateKey, err := DecodeBase58CheckString( encodedPrivateKey )
+		privateKey := key_generation.GeneratePrivateKey()
+		encodedPrivateKey := encode.EncodeBase58Check(encode.PrivateKeyWif, privateKey)
+		decodedPrivateKey, err := Base58CheckString( encodedPrivateKey )
 		if err != nil{
 			errorCount++
 			t.Errorf( "PrivateKey: %s | EncodedWif %s | Error: %s",
@@ -121,8 +124,8 @@ func TestEncodeDecodeWif(t *testing.T) {
 	key := "69fa7023a22b383bc9d778ac1dbfee1b2e3d96a4f6aefa115873b64fb7923312"
 	privateKey := new(big.Int)
 	privateKey.SetString( key, 16 )
-	encoded := EncodeBase58Check( PrivateKeyWif, privateKey )
-	decoded, err := DecodeBase58CheckString( encoded )
+	encoded := encode.EncodeBase58Check(encode.PrivateKeyWif, privateKey )
+	decoded, err := Base58CheckString( encoded )
 	if err != nil{
 		t.Errorf( "Encoded %s | Error: %s", encoded, err.Error() )
 	}

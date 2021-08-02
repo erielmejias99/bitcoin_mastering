@@ -1,11 +1,10 @@
-package bitcoin
+package encode
 
 import (
 	"crypto/sha256"
+	"github.com/bitcoin_mastering/internal/bitcoin/consts"
 	"math/big"
 )
-
-const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 func EncodeBase58Check( prefix EncodePrefix, key * big.Int ) string{
 	checkSum := checksum( prefix, key.Bytes() )
@@ -27,7 +26,7 @@ func EncodeBase58Check( prefix EncodePrefix, key * big.Int ) string{
 	zero := big.NewInt(0)
 	for number.Cmp( zero ) != 0{
 		digit.Mod( number, base )
-		invertedFormattedKey += string(alphabet[ digit.Int64() ])
+		invertedFormattedKey += string(consts.Base58Alphabet[ digit.Int64() ])
 		number.Div( number, base )
 	}
 

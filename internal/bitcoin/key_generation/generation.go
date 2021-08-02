@@ -1,6 +1,7 @@
-package bitcoin
+package key_generation
 
 import (
+	"github.com/bitcoin_mastering/internal/bitcoin/consts"
 	"math/big"
 )
 
@@ -14,7 +15,7 @@ func GeneratePrivateKey() * big.Int {
 		decodedPrivateKey, _ = decodedPrivateKey.SetString( privateKey ,16)
 
 		if decodedPrivateKey.Cmp( big.NewInt(0) ) == 1 &&
-			decodedPrivateKey.Cmp( GetN() ) == -1 &&
+			decodedPrivateKey.Cmp( consts.GetN() ) == -1 &&
 			len( decodedPrivateKey.Text(16) ) == 64{
 			validPrivateKey = true
 		}
