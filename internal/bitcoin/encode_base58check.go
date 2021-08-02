@@ -38,11 +38,6 @@ func EncodeBase58Check( prefix EncodePrefix, key * big.Int ) string{
 	return formattedKey
 }
 
-//func EncodeBase58HexString( prefix EncodePrefix, key * big.Int ) string{
-//	base58Byte := EncodeBeforeBaseBase58( prefix, key )
-//	return hex.EncodeToString( base58Byte )
-//}
-
 func checksum( prefix EncodePrefix, payload []byte) []byte  {
 	fullPayload := prefix.Bytes()
 	fullPayload = append(fullPayload,  payload... )

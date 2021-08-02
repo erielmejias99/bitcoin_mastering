@@ -2,6 +2,7 @@ package bitcoin
 
 import (
 	"encoding/hex"
+	"math/big"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ func TestDecodeStringToInt(t *testing.T){
 	resp, err := decodeBase58CheckToInt( privateKeyBase58CheckWif )
 	if err != nil{
 		t.Errorf( "Error decoding base58CheckString" )
-		return
+		t.FailNow()
 	}
 
 	hexFormat := hex.EncodeToString( resp.Bytes() )
@@ -90,5 +91,42 @@ func TestDecodeBase58CheckStringBadWifKey(t *testing.T) {
 	_, err = DecodeBase58CheckString( "5J3mbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2Jpbnkeyhfs45YB1Jcn" )
 	if err != nil {
 		t.Log("Extra character passed!")
+	}
+}
+
+func TestEncodeDecodeWithRandomKeys(t *testing.T){
+	const total = 10000
+	var errorCount = 0
+	for totalTest := total;totalTest > 0; totalTest--{
+		privateKey := GeneratePrivateKey()
+		encodedPrivateKey := EncodeBase58Check( PrivateKeyWif, privateKey)
+		decodedPrivateKey, err := DecodeBase58CheckString( encodedPrivateKey )
+		if err != nil{
+			errorCount++
+			t.Errorf( "PrivateKey: %s | EncodedWif %s | Error: %s",
+				privateKey.Text(16), encodedPrivateKey, err.Error() )
+			continue
+		}
+		if  privateKey.Text(16) != decodedPrivateKey{
+			errorCount++
+			t.Errorf( "Diferent keys")
+		}
+	}
+	if errorCount != 0{
+		t.Errorf("Errors/TotalCases -> %d/%d", errorCount, total )
+	}
+}
+
+func TestEncodeDecodeWif(t *testing.T) {
+	key := "69fa7023a22b383bc9d778ac1dbfee1b2e3d96a4f6aefa115873b64fb7923312"
+	privateKey := new(big.Int)
+	privateKey.SetString( key, 16 )
+	encoded := EncodeBase58Check( PrivateKeyWif, privateKey )
+	decoded, err := DecodeBase58CheckString( encoded )
+	if err != nil{
+		t.Errorf( "Encoded %s | Error: %s", encoded, err.Error() )
+	}
+	if key != decoded{
+		t.FailNow();
 	}
 }

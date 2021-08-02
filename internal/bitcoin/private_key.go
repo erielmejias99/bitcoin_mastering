@@ -14,7 +14,7 @@ func RandomPrivateKey() string {
 	privateKey, _ := RandomString(32)
 
 	maxRand := new(big.Int)
-	maxRand.SetBit( big.NewInt(0) , 256,1)
+	maxRand.SetBit( big.NewInt(0) , 255,1)
 	randInt, err := rand.Int ( rand.Reader, maxRand )
 	if err != nil {
 		return ""

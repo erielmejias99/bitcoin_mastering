@@ -1,13 +1,12 @@
 package bitcoin
 
 import (
-	"encoding/hex"
 	"errors"
 	"math/big"
 )
 
 func discoverEncode( key string ) (EncodePrefix, error){
-	if key[ 0 ] == '5'{
+	if key[ 0 ] == '5' || key[ 0 ] == 'K' || key[ 0 ] == 'L'{
 		return PrivateKeyWif, nil
 	}
 	return "",errors.New("PrefixFormat not found")
@@ -113,5 +112,5 @@ func DecodeBase58CheckString( key string ) (string, error){
 	if err != nil || bigInt == nil {
 		return "", err
 	}
-	return hex.EncodeToString( bigInt.Bytes() ), nil
+	return bigInt.Text( 16 ), nil
 }
