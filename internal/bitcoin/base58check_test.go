@@ -105,27 +105,48 @@ func TestEncodeDecodeWithRandomKeys(t *testing.T){
 }
 
 func TestEncodeDecodeWithRandomKeysBigInt(t *testing.T){
-	const total = 1000
+	const total = 5
 	var errorCount = 0
 	for totalTest := total;totalTest > 0; totalTest--{
 		privateKey := key_generation.GeneratePrivateKey()
-		encodedPrivateKey, err := Encode( consts.PrivateKeyWif, privateKey)
+
+		// encodes Wif
+		encodedPrivateKeyWif, err := Encode( consts.PrivateKeyWif, privateKey)
 		if err != nil {
 			errorCount++
 			t.Errorf( "PrivateKey: %s  Error: %s",
 				privateKey.Text(16), err.Error() )
 			continue
 		}
-		decodedPrivateKey, err := Decode( encodedPrivateKey )
+		decodedPrivateKey, err := Decode( encodedPrivateKeyWif )
 		if err != nil{
 			errorCount++
 			t.Errorf( "PrivateKey: %s | EncodedWif %s | Error: %s",
-				privateKey.Text(16), encodedPrivateKey, err.Error() )
+				privateKey.Text(16), encodedPrivateKeyWif, err.Error() )
 			continue
 		}
 		if  privateKey.Cmp( decodedPrivateKey ) != 0{
 			errorCount++
 			t.Errorf( "Diferent keys")
+		}
+
+		// WifCompressed
+		encodedPrivateKeyWifCompressed, err := Encode( consts.PrivateKeyWifCompressed, privateKey)
+		if err != nil {
+			errorCount++
+			t.Errorf( "PrivateKey: %s  Error: %s",
+				privateKey.Text(16), err.Error() )
+			continue
+		}
+		decodedPrivateKeyFromWifCompressed, err := DecodeString( encodedPrivateKeyWifCompressed )
+		if err != nil {
+			errorCount++
+			t.Errorf( "Error decoding compressed wif %s", err.Error())
+			continue
+		}
+		if  privateKey.Text(16) != decodedPrivateKeyFromWifCompressed +"01"{
+			errorCount++
+			t.Errorf( "Diferent keys Compressed %s -> %s" , privateKey.Text(16), decodedPrivateKeyFromWifCompressed)
 		}
 	}
 	if errorCount != 0{
